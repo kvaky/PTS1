@@ -3,11 +3,14 @@ import getpass
 
 mena_hraci={}
 
-def najdiHraca(name):
-	for hrac in zoznam:
-		if hrac.name==name:
-			return hrac
-	return False
+
+def getpassword(command):
+	def wrapper(self,args):
+		if getpass.getpass()==password:
+			return command(self,args)
+		else:
+			print('Zadal si zle heslo')
+	return wrapper
 
 class Hrac:
 	
@@ -17,8 +20,12 @@ class Hrac:
 		self.name=name
 		self.points=int(points)
 
+
 class ParseCommands(cmd.Cmd):
-	
+
+	prompt= 'cakam prikaz: '
+		
+	@getpassword
 	def do_points(self,args):
 		name,points=args.split()
 		if name not in mena_hraci:
@@ -29,11 +36,13 @@ class ParseCommands(cmd.Cmd):
 			mena_hraci[name].points+=int(points)
 			print(name,'ma',mena_hraci[name].points,'bodov')
 	
+	@getpassword
 	def do_reduce(self,percent):
 		percent=int(percent)/100
-		for hrac in zoznam:
+		for hrac in mena_hraci.values():
 			hrac.points=int(hrac.points*(1-percent))
 	
+	@getpassword
 	def do_junior(self,name):
 		mena_hraci[name].junior=True
 
@@ -42,10 +51,11 @@ class ParseCommands(cmd.Cmd):
 		for hrac in zoznam:
 			if args=='junior': 
 				if hrac.junior:
-					print(hrac.name)
-			else:print(hrac.name)	
+					print(hrac.name,hrac.points,'bodov')
+			else:print(hrac.name,hrac.points,'bodov')	
 
-	def do_quit(self,args):return True	
+	@getpassword
+	def do_quit(self,args):return True
 
 password=getpass.getpass(prompt='Vloz heslo, ktore budes pouzivat ')
 
