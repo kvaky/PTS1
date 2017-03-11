@@ -1,4 +1,5 @@
 import cmd
+import getpass
 
 mena_hraci={}
 
@@ -22,7 +23,6 @@ class ParseCommands(cmd.Cmd):
 		name,points=args.split()
 		if name not in mena_hraci:
 			mena_hraci[name]=Hrac(name,points)
-			zoznam.append(mena_hraci[name])
 			print('pridal som cloveka',name,'s',points,'bodmi')
 		else:
 			print('pridavam',points,'pre',name)
@@ -38,10 +38,15 @@ class ParseCommands(cmd.Cmd):
 		mena_hraci[name].junior=True
 
 	def do_ranking(self,args):
-		for hrac in sorted(mena_hraci,key=lambda hrac: mena_hraci[hrac].points,reverse=True):
-			print(hrac)
-	
+		zoznam=sorted(mena_hraci.values(),key=lambda hrac:hrac.points,reverse=True)
+		for hrac in zoznam:
+			if args=='junior': 
+				if hrac.junior:
+					print(hrac.name)
+			else:print(hrac.name)	
 
-password=input('Put your new password: ')
+	def do_quit(self,args):return True	
+
+password=getpass.getpass(prompt='Vloz heslo, ktore budes pouzivat ')
 
 ParseCommands().cmdloop()
