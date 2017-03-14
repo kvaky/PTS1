@@ -25,9 +25,32 @@ class Hrac:
 
 #Trieda implementujuca komunikaciu s pouzivatelom
 class ParseCommands(cmd.Cmd):
-
-	prompt= 'cakam prikaz: '
+	intro= '\nNapis help pre dokumentaciu'
+	prompt= '\ncakam prikaz: '
 	
+	#funkcie zacinajuce 'help' su dokumentujuce prikazy	
+	def help_points(self):
+		print( '''points <name> <number>
+  Prida hracovi <name> <number> bodov a vypise o tom hlasku. Cislo moze by aj zaporne.
+  Ak hrac <name> este nie je evidovany, prida ho do zoznamu s <number> bodmi a vypise o tom
+  hlasku.''')
+
+	def help_junior(self):
+		print('''\njunior <name>
+  Oznaci, ze hrac <name> je junior''')
+
+	def help_quit(self):
+		print('\nvypne aplikaciu')
+
+	def help_ranking(self):
+		print('''\nranking (optional: <'junior'>)
+  Vypise cele poradie v tvare: poradove cislo, meno, pocet bodov. Hracov zoradime podla poctu bodov.
+  Ak date ako argument retazec 'junior', vypise poradie medzi juniormi''')
+
+	def help_reduce(self):
+		print('''\nreduce <number>
+  Znizi pocet bodov kazdeho hraca o <number>%. Vysledok sa zaokrhli na cele cisla nadol.''')
+
 	#ak hrac nie je este evidovany v slovniku, tak ho evidujeme pod menom name s points 
 	#bodmi a oznamime to pouzivatelovi
 	#inak hracovi name pridame points bodov a oznamime to pouzivatelovi	
@@ -36,9 +59,9 @@ class ParseCommands(cmd.Cmd):
 		name,points=args.split()
 		if name not in mena_hraci:
 			mena_hraci[name]=Hrac(name,points)
-			print('pridal som cloveka',name,'s',points,'bodmi')
+			print('\npridal som cloveka',name,'s',points,'bodmi')
 		else:
-			print('pridavam',points,'pre',name)
+			print('\npridavam',points,'pre',name)
 			mena_hraci[name].points+=int(points)
 			print(name,'ma',mena_hraci[name].points,'bodov')
 
@@ -60,19 +83,22 @@ class ParseCommands(cmd.Cmd):
 	#inak vypise to iste pre vsetkych hracov
 	def do_ranking(self,args):
 		zoznam=sorted(mena_hraci.values(),key=lambda hrac:hrac.points,reverse=True)
+		vypis=[]
 		if args=='junior':
 			for hrac in zoznam:
-				if not hrac.junior:
-					zoznam.remove(hrac)
-		for i in range(0,len(zoznam)):
-			print(i+1,zoznam[i].name,zoznam[i].points,'bodov')			
+				if hrac.junior:
+					vypis.append(hrac)
+		else:
+			vypis=zoznam
+		for i in range(0,len(vypis)):
+			print('\n',i+1,vypis[i].name,vypis[i].points,'bodov')			
 			
 	#ukonci aplikaciu		
 	@getpassword
 	def do_quit(self,args):return True
 
 #vypyta si od uzivatela heslo ktore bude pouzivat bez toho aby ho zobrazovalo
-password=getpass.getpass(prompt='Vloz heslo, ktore budes pouzivat ')
+password=getpass.getpass(prompt='\nVloz heslo, ktore budes pouzivat (je neviditelne) ')
 
 #spusti komunikaciu s uzivatelom
 ParseCommands().cmdloop()
