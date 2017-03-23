@@ -1,0 +1,6 @@
+Zislo by sa drzat sa PEP-8 - max 80 znakov na riadok, medzere za ciarkami a pred a po rovnitku, indentovanie by malo byt konzistentne, komentare, ked zacinaju na novom riadku musia mat za # jednu medzeru, 2 volne riadky medzi classami a def novej funkcie. Odsadzat treba 4 medzerami, nie tabmi(treba nastavit editor)
+Komentare funkcii by sa mali drzat PEP-257
+20: junior = False -- toto sa sprava ako globalna premenna, treba ju dat ako self.junior = False do __init__
+na moj vkus je tam vela volnych medzier, skoro vzdy ked to nieco vypisuje. Je to len dizajnova zmena, nemusi byt.
+Nemusi to byt, ale bolo by fajn ak by fungoval aj pre percenta a body, ktore nemusia nutne byt int. Je to mala zmena a moze pridat funkcionalitu.
+Paci sa mi pouzitie cmd kniznice a neviditleneho hesla
